@@ -1,0 +1,25 @@
+# User (Author)
+- id (string - unique)
+- name (string)
+- email (string - email - unique)
+- phone (string)
+- about (string)
+- username (string - unique)
+
+# Category
+- id (string - unique)
+- name (string)
+- slug (string - unique)
+- description (string)
+
+# Blog Post
+- id (string - unique)
+- title (string)
+- slug (string - unique)
+- description (string)
+- body (string)
+- image (string)
+- dateCreated (datetime)
+- author (User - One-Many Relationship)
+- isPublished (Boolean)
+- category (Category - One-Many Relationship)
