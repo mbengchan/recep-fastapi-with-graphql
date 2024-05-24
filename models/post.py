@@ -1,12 +1,8 @@
 from datetime import datetime
 
 from database.dbconfig import Base
-from pydantic import BaseModel
 from sqlalchemy import Boolean, Column, DateTime, ForeignKey, Integer, String
 from sqlalchemy.orm import relationship
-
-from .category import Category
-from .user import User
 
 
 class Post(Base):

@@ -1,6 +1,5 @@
 from database.dbconfig import Base
-from pydantic import BaseModel
-from sqlalchemy import Boolean, Column, ForeignKey, Integer, String
+from sqlalchemy import Boolean, Column, Integer, String
 
 
 class Category(Base):
