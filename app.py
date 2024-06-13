@@ -4,11 +4,27 @@ import strawberry
 from database.category import create_category, get_categories, get_category
 from database.dbconfig import Base, SessionLocal, engine
 from fastapi import FastAPI, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
 # from models.category import Base
 from routes.category import router as CategoryRouter
 from routes.user import router as UserRouter
 from schemas.category import CategoryInput, CategoryType
+from schemas.post import Post, PostBase, PostType
 from strawberry.fastapi import GraphQLRouter
+
+posts = [
+    Post.model_validate(
+        {
+          "id": 1, 
+          "author_id": 2, 
+          "author": {
+              "id": 2,
+              "name": "John Doe",
+              "email": "johndoe@example.com"
+          }, 
+          "title": "What is Lorem Ipsum?", 
+          "description": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.", "image": None, "body": None})
+]
 
 
 # Define a graphql class type
@@ -26,6 +42,15 @@ class Query:
             raise HTTPException(status_code=404, detail="Category not found")
         
         return category
+    
+    @strawberry.field
+    async def post(id: int) -> PostType:
+        db = SessionLocal()
+        post = posts[id]
+        if post is None:
+            raise HTTPException(status_code=404, detail="Category not found")
+        
+        return post
     
     @strawberry.field
     async def categories() -> typing.List[CategoryType]:
@@ -56,10 +81,24 @@ def appStartup():
 def appShutdown():
     print("App stopped")
 
+origins = [
+    "http://localhost:4200",
+    "http://localhost",
+]
+
 app = FastAPI(
     debug=True,
     on_startup=appStartup()
 )
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 
 @app.get('/')
 def read_root():
